@@ -1,0 +1,45 @@
+import nltkimport numpy as np 
+import refrom sklearn.feature_extraction.text import TfidfVectorizer 
+from nltk.tokenize import sent_tokenize 
+nltk.download('punkt') 
+def clean_text(text):    # Удаляем специальные символы и лишние пробелы 
+    text = re.sub(r'\s+', ' ', text)   
+    return text.strip() 
+
+def summarize_strong(text): 
+    # Сильное сжатие: одно-два предложения    
+    sentences = sent_tokenize(text) 
+    if len(sentences) <= 2:
+        return text  # Если предложений меньше 2, возвращаем оригинал 
+    
+    return ' '.join(sentences[:2])  # Возвращаем первые два предложения 
+
+def summarize_weak(text):    # Слабое сжатие: краткий абзац 
+    sentences = sent_tokenize(text)   
+    tfidf_vectorizer = TfidfVectorizer() 
+    tfidf_matrix = tfidf_vectorizer.fit_transform(sentences)     
+    # Считаем важность предложений    
+    sentence_scores = np.sum(tfidf_matrix.toarray(), axis=1) 
+        # Получаем индексы предложений с наибольшими оценками 
+    ranked_sentences = [sentences[i] for i in sentence_scores.argsort()[-3:]]  # Топ-3 предложения  
+    return ' '.join(ranked_sentences) 
+def main(): 
+    print("Введите текст для сжатия:")   
+    user_input = input() 
+    cleaned_text = clean_text(user_input) 
+    print("\nВыберите уровень сжатия:")    
+    print("1. Сильное сжатие (одно-два предложения)") 
+    print("2. Слабое сжатие (краткий абзац)")   
+    choice = input("Введите 1 или 2: ") 
+    if choice == '1': 
+        result = summarize_strong(cleaned_text)
+        print("\nРезультат сильного сжатия:") 
+    elif choice == '2':        
+        result = summarize_weak(cleaned_text)
+        print("\nРезультат слабого сжатия:")
+    else:     
+        print("Неверный выбор.")        
+    
+    return print(result) 
+if name == "main": 
+    main()
