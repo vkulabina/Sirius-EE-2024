@@ -1,0 +1,16 @@
+from gtts import gTTS 
+import os 
+ 
+# Открываем файл с текстом для чтения 
+with open('текстовый_файл.txt', 'r') as file: 
+    text = file.read() 
+ 
+# Создаем объект gTTS 
+tts = gTTS(text, lang='ru') 
+ 
+# Сохраняем аудио-файл 
+tts.save('звуковой_файл.mp3') 
+ 
+# Воспроизводим аудио-файл 
+os.system('звуковой_файл.mp3')
+gtts - google text to speech
